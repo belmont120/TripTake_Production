@@ -11,6 +11,7 @@ var express         = require("express"),
     methodOverride  = require("method-override"),
     expressSanitizer = require("express-sanitizer"),
     flash           = require("connect-flash");
+    moment          = require("moment");    
                       require("dotenv/config");
 
 
@@ -26,6 +27,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(expressSanitizer());
 app.use(flash());
+moment().format();
 
 // Passport config
 app.use(require("express-session")({
