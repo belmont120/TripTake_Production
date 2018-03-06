@@ -7,6 +7,8 @@ var momentSchema = new mongoose.Schema({
     location: String,
     latitude: Number,
     longitude: Number,
+    createdAt: {type: Date, default: Date.now},
+    cost: Number,
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,

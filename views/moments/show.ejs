@@ -8,18 +8,18 @@
 
         <div class="col-md-9">
             <div class="thumbnail">
-                <img src="<%= moment.image %>" alt="<%= moment.description %>" class="img-responsive">
+                <img src="<%= foundMoment.image %>" alt="<%= foundMoment.description %>" class="img-responsive">
                 <div class="caption">
-                    <h4 class="pull-right">$9.00/night</h4>
-                    <h4><a href="#"><%= moment.name %></a></h4>
-                    <p><%- moment.description %></p>
+                    <h4 class="pull-right"><%= foundMoment.cost %>/Stay</h4>
+                    <h4><a href="#"><%= foundMoment.name %></a></h4>
+                    <p><%- foundMoment.description %></p>
                     <p>
-                        <em>Submitted By <%= moment.author.username %></em>
+                        <em>Submitted By <%= foundMoment.author.username %>, <%= moment(foundMoment.createdAt).fromNow() %></em>
                     </p>
 
-                    <% if(currentUser && (moment.author.id.equals(currentUser._id) || currentUser.isAdmin)) { %>
-                        <a class="btn btn-warning" href="/moments/<%= moment._id %>/edit">Edit</a>
-                        <form class="delete-form" action="/moments/<%= moment._id %>?_method=DELETE" method="POST">
+                    <% if(currentUser && (foundMoment.author.id.equals(currentUser._id) || currentUser.isAdmin)) { %>
+                        <a class="btn btn-warning" href="/moments/<%= foundMoment._id %>/edit">Edit</a>
+                        <form class="delete-form" action="/moments/<%= foundMoment._id %>?_method=DELETE" method="POST">
                             <button class="btn btn-danger">Delete</button>
                         </form>
                     <% } %>
@@ -29,18 +29,18 @@
 
             <div class="well">
                 <div class="text-right">
-                    <a href="/moments/<%= moment._id %>/comments/new" class="btn btn-primary">Leave Comment</a>   
+                    <a href="/moments/<%= foundMoment._id %>/comments/new" class="btn btn-primary">Leave Comment</a>   
                 </div>
-                <% moment.comments.forEach(function(comment){ %>
+                <% foundMoment.comments.forEach(function(comment){ %>
                     <hr>
                     <div class="row">
                         <div class="col-md-12">
                             <strong><%= comment.author.username %></strong>
-                            <span class="pull-right">10 days ago</span>
+                            <span class="pull-right"><%= moment(comment.createdAt).fromNow() %></span>
                             <p><%= comment.text %></p>
                             <% if(currentUser && (comment.author.id.equals(currentUser._id) || currentUser.isAdmin)) { %>
-                                <a class="btn btn-warning" href="/moments/<%= moment._id %>/comments/<%= comment._id %>/edit">Edit</a>
-                                <form class="delete-form" action="/moments/<%= moment._id %>/comments/<%= comment._id %>/?_method=DELETE" method="POST">
+                                <a class="btn btn-warning" href="/moments/<%= foundMoment._id %>/comments/<%= comment._id %>/edit">Edit</a>
+                                <form class="delete-form" action="/moments/<%= foundMoment._id %>/comments/<%= comment._id %>/?_method=DELETE" method="POST">
                                     <button class="btn btn-danger">Delete</button>
                                 </form>
                             <% } %>
@@ -80,7 +80,7 @@
     function initMap(){
         var options = {
             zoom:9,
-            center: {lat:<%=moment.latitude%>,lng:<%=moment.longitude%>}
+            center: {lat:<%=foundMoment.latitude%>,lng:<%=foundMoment.longitude%>}
         }
 
         var map = new google.maps.Map(document.getElementById("map"), options);
@@ -90,7 +90,7 @@
         });
     }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=<%= moment.api_key %>&callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= foundMoment.api_key %>&callback=initMap"
 async defer></script>
 <% include ../partials/navbarBottom %>
 <% include ../partials/footer %>

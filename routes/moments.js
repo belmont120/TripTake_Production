@@ -74,7 +74,7 @@ router.get("/:id", function (req, res) {
             // console.log(foundMoment);
             foundMoment.api_key = process.env.GOOGLE_MAP_KEY;
             res.render("moments/show", {
-                moment: foundMoment
+                foundMoment: foundMoment
             });
         }
     });
@@ -126,8 +126,6 @@ router.post("/", middleware.isLoggedIn, upload.single('moment[image]'),function 
 
 
     geocoder.geocode(newMoment.location, function(err, data){
-
-
 
         if (gps === undefined && data !== undefined) {
             if (err && !data.length) {
