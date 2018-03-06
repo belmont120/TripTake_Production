@@ -59,7 +59,8 @@
 }
 
 .container.main {
-    margin-top: 4.0em;
+    margin-top: 4.5em;
+    margin-bottom: 4.5em;
 }
 
 .alert {
@@ -72,3 +73,10 @@
     margin: 7px 0px;
 }
 
+form button .btn .btn-primary {
+    display: inline-block;
+}
+
+.form-container {
+    min-width: 330px;
+}

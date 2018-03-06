@@ -19,7 +19,7 @@ commentRoutes       = require("./routes/comments"),
 indexRoutes         = require("./routes/index");
 
 // seedDB();
-mongoose.connect("mongodb://localhost/TripTake_test");
+mongoose.connect("mongodb://localhost/TripTake_Production");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));

@@ -37,8 +37,6 @@ middlewareObj.removeMomentComments = function(req, res, next) {
                 console.log(err);
                 res.redirect("back");
             } else {
-                functions.checkObjExistAndPushFlash(req, res, foundMoment);
-
                 Comment.remove({
                     _id: {
                         $in: foundMoment.comments
@@ -62,8 +60,6 @@ middlewareObj.removeMoment = function(req, res, next){
             console.log(err);
             res.redirect("back");
         } else {
-            functions.checkObjExistAndPushFlash(req, res, foundMoment);
-
             next();
         }
     });
@@ -80,7 +76,6 @@ middlewareObj.removeCommentReference = function(req, res, next) {
                 console.log(err);
                 res.redirect("back");
             } else {
-                functions.checkObjExistAndPushFlash(req, res, foundMoment);
                 next();
             }
         }
@@ -93,15 +88,16 @@ middlewareObj.checkCommentOwnership = function(req, res, next) {
             if (err) {
                 res.redirect("back");
             } else {
-                functions.checkObjExistAndPushFlash(req, res, foundMoment);
+                if (!foundMoment) {
+                    res.redirect("back");
+                }
 
                 Comment.findById(req.params.comment_id, function (err, foundComment) {
                     if (err) {
                         res.redirect("back");
                     } else {
-                        functions.checkObjExistAndPushFlash(req, res, foundComment);
 
-                        if (foundComment.author.id.equals(req.user._id)) {
+                        if (foundComment && foundComment.author.id.equals(req.user._id)) {
                             next();
                         } else {
                             res.redirect("back");
