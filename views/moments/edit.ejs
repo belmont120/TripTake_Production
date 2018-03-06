@@ -14,8 +14,13 @@
 
                 <div class="form-group">
                     <label for="momentImage">Image</label>
-                    <input type="text" name="moment[image]" class="form-control" id="momentImage" placeholder="ImageUrl" value="<%= moment.image %>" required>
+                    <input type="text" name="moment[image]" class="form-control" id="momentImage" placeholder="ImageUrl" value="<%= moment.image %>" disabled>
                 </div>
+
+                <div class="form-group">
+                    <label for="momentLocation">Location</label>
+                    <input type="text" name="moment[location]" class="form-control" id="momentLocation" placeholder="1280 Ferntree Gully Rd, Scoresby VIC 3179" value="<%= moment.location %>">
+                </div>                
 
                 <div class="form-group">
                     <label for="momentDesc">Description</label>

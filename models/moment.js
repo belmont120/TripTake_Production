@@ -4,6 +4,9 @@ var momentSchema = new mongoose.Schema({
     name: String,
     image: String,
     description: String,
+    location: String,
+    latitude: Number,
+    longitude: Number,
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,

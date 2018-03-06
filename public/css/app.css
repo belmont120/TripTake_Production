@@ -80,3 +80,8 @@ form button .btn .btn-primary {
 .form-container {
     min-width: 330px;
 }
+
+#map {
+    height: 400px;
+    width: 100%;
+}

@@ -8,7 +8,16 @@ var expressSanitizer = require("express-sanitizer");
 var middleware = require("../middleware");
 var multer = require("multer");
 var cloudinary = require("cloudinary");
+var NodeGeocoder = require("node-geocoder");
 
+var options = {
+    provider: "google",
+    httpAdapter: "https",
+    apiKey: process.env.GOOGLE_MAP_KEY,
+    formatter: null
+};
+
+var geocoder = NodeGeocoder(options);
 
 var storage = multer.diskStorage({
     filename: function(req, file, callback){
@@ -62,6 +71,7 @@ router.get("/:id", function (req, res) {
             }
             // console.log("Moment From Db: ");
             // console.log(foundMoment);
+            foundMoment.api_key = process.env.GOOGLE_MAP_KEY;
             res.render("moments/show", {
                 moment: foundMoment
             });
@@ -93,35 +103,58 @@ router.post("/", middleware.isLoggedIn, upload.single('moment[image]'),function 
     newMoment.author = author;
     newMoment = sanitizeMoment(req, newMoment);
 
-    cloudinary.uploader.upload(req.file.path, function(result) {
+    geocoder.geocode(newMoment.location, function(err, data){
+        if (err || !data.length) {
+            req.flash("error", err);
+            return res.redirect("back");
+        }
 
-        newMoment.image = result.secure_url;
+        newMoment.location = data[0].formattedAddress;
+        newMoment.latitude = data[0].latitude;
+        newMoment.longitude = data[0].longitude;
 
-        Moment.create(newMoment, function(err, moment) {
-          if (err) {
-            req.flash('error', err.message);
-            return res.redirect('back');
-          }
-          res.redirect('/moments/' + moment.id);
+        cloudinary.uploader.upload(req.file.path, function(result) {
+
+            newMoment.image = result.secure_url;
+    
+            Moment.create(newMoment, function(err, moment) {
+              if (err) {
+                req.flash('error', err.message);
+                return res.redirect('back');
+              }
+              res.redirect('/moments/' + moment.id);
+            });
         });
-      });
+    });
 });
 
 router.put("/:id", middleware.checkMomentOwnership, function (req, res) {
     var editedMoment = req.body.moment;
+
     editedMoment = sanitizeMoment(req, editedMoment);
 
-    Moment.findByIdAndUpdate(req.params.id, editedMoment, function (err, foundMoment) {
-        if (err) {
-            console.log(err);
-            res.redirect("back");
-        } else {
-            if (!foundMoment){
-                req.flash("error", "The item you are requesting is not found!");
-                return res.redirect("back");
-            }
-            res.redirect("/moments/" + foundMoment.id);
+    geocoder.geocode(editedMoment.location, function(err, data){
+        if (err || !data.length) {
+            req.flash("error", err.message);
+            return res.redirect("back");
         }
+
+        editedMoment.location = data[0].formattedAddress;
+        editedMoment.latitude = data[0].latitude;
+        editedMoment.longitude = data[0].longitude;
+
+        Moment.findByIdAndUpdate(req.params.id, editedMoment, function (err, foundMoment) {
+            if (err) {
+                console.log(err);
+                res.redirect("back");
+            } else {
+                if (!foundMoment){
+                    req.flash("error", "The item you are requesting is not found!");
+                    return res.redirect("back");
+                }
+                res.redirect("/moments/" + foundMoment.id);
+            }
+        });
     });
 });
 
@@ -131,7 +164,7 @@ router.delete("/:id", middleware.checkMomentOwnership, middleware.removeMomentCo
 
 function sanitizeMoment(req, moment) {
     moment.name = req.sanitize(moment.name);
-    moment.image = req.sanitize(moment.image);
+
     moment.description = req.sanitize(moment.description);
 
     return moment;
