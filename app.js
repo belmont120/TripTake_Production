@@ -52,6 +52,6 @@ app.use("/",indexRoutes);
 app.get("*", function (req, res) {
     res.redirect("/moments");
 });
-app.listen(3001, process.env.IP, function () {
+app.listen(3000, process.env.IP, function () {
     console.log("The TripTake Server has started!");
 });
