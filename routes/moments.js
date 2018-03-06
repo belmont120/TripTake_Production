@@ -9,6 +9,7 @@ var middleware = require("../middleware");
 var multer = require("multer");
 var cloudinary = require("cloudinary");
 var NodeGeocoder = require("node-geocoder");
+var ExifImage = require("exif").ExifImage;
 
 var options = {
     provider: "google",
@@ -102,16 +103,40 @@ router.post("/", middleware.isLoggedIn, upload.single('moment[image]'),function 
     var newMoment = req.body.moment;
     newMoment.author = author;
     newMoment = sanitizeMoment(req, newMoment);
+    var gps;
+
+
+    new ExifImage({ image : req.file.path }, function (error, exifData) {
+        // if (error) {
+        //     req.flash('error', error.message);
+        //     return res.redirect('back');
+        // }
+        // else {
+        if (exifData !== undefined && exifData.gps !== undefined) {
+            gps = exifData.gps;
+            newMoment.latitude = convertDegreeAngleToDouble(
+                gps.GPSLatitude[0], gps.GPSLatitude[1], gps.GPSLatitude[2], gps.GPSLatitudeRef);
+            newMoment.longitude = convertDegreeAngleToDouble(
+                gps.GPSLongitude[0], gps.GPSLongitude[1], gps.GPSLongitude[2], gps.GPSlongitudeRef);   
+        }
+        
+        // }
+    });
+
+
 
     geocoder.geocode(newMoment.location, function(err, data){
-        if (err || !data.length) {
-            req.flash("error", err);
-            return res.redirect("back");
-        }
 
-        newMoment.location = data[0].formattedAddress;
-        newMoment.latitude = data[0].latitude;
-        newMoment.longitude = data[0].longitude;
+
+
+        if (gps === undefined && data !== undefined) {
+            if (err && !data.length) {
+                req.flash("error", err.message);
+                return res.redirect("back");
+            }
+
+            mapGpsFromGeoCode(data[0], newMoment);
+        }
 
         cloudinary.uploader.upload(req.file.path, function(result) {
 
@@ -134,14 +159,15 @@ router.put("/:id", middleware.checkMomentOwnership, function (req, res) {
     editedMoment = sanitizeMoment(req, editedMoment);
 
     geocoder.geocode(editedMoment.location, function(err, data){
-        if (err || !data.length) {
-            req.flash("error", err.message);
-            return res.redirect("back");
-        }
 
-        editedMoment.location = data[0].formattedAddress;
-        editedMoment.latitude = data[0].latitude;
-        editedMoment.longitude = data[0].longitude;
+        if (data !== undefined) {
+            if (err && !data.length) {
+                req.flash("error", err.message);
+                return res.redirect("back");
+            }
+
+            mapGpsFromGeoCode(data[0], editedMoment);
+        }
 
         Moment.findByIdAndUpdate(req.params.id, editedMoment, function (err, foundMoment) {
             if (err) {
@@ -162,12 +188,23 @@ router.delete("/:id", middleware.checkMomentOwnership, middleware.removeMomentCo
     res.redirect("/moments");
 });
 
+function mapGpsFromGeoCode(src, des) {
+    src.location = des.formattedAddress;
+    src.latitude = des.latitude;
+    src.longitude = des.longitude;
+}
+
 function sanitizeMoment(req, moment) {
     moment.name = req.sanitize(moment.name);
 
     moment.description = req.sanitize(moment.description);
 
     return moment;
+}
+
+function convertDegreeAngleToDouble(degrees, minutes, seconds, ref)
+{
+    return (degrees + (minutes/60) + (seconds/3600)) * ((ref === "S" || ref === "W") ? -1 : 1);
 }
 
 module.exports = router;
