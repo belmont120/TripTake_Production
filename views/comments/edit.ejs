@@ -1,0 +1,30 @@
+<% include ../partials/header %>
+<% include ../partials/navbar %>
+<div class="container main">
+    <div class="row">
+        <% include ../partials/flash %>
+        <div class="form-container">
+            <form action="/moments/<%= momentId %>/comments/<%= comment.id %>?_method=PUT" method="POST" role="form">
+                <legend style="text-align: center;">Edit Comment</legend>
+
+                <div class="form-group">
+                    <label for="text">Comment</label>
+                    <textarea class="form-control" name="comment[text]" id="text" placeholder="Enter comment here" rows="10" required><%= comment.text %></textarea>
+                </div>
+
+                <div class="wrapper text-center">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <a href="/moments/<%= momentId %>" class="btn btn-danger" role="button">Back To Moment</a>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+             
+        </div>
+
+    </div>
+
+</div>
+
+<% include ../partials/navbarBottom %>
+<% include ../partials/footer %>

@@ -1,0 +1,40 @@
+<% include ../partials/header %>
+<% include ../partials/navbar %>
+<div class="container main">
+    <div class="row">
+        <% include ../partials/flash %>
+        <div class="form-container">
+            <form action="/moments/<%= moment._id %>?_method=PUT" method="POST" role="form">
+                <legend style="text-align: center;">Edit <%= moment.name %></legend>
+
+                <div class="form-group">
+                    <label for="momentName">Name</label>
+                    <input type="text" name="moment[name]" class="form-control" id="momentName" placeholder="Name" value="<%= moment.name %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="momentImage">Image</label>
+                    <input type="text" name="moment[image]" class="form-control" id="momentImage" placeholder="ImageUrl" value="<%= moment.image %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="momentDesc">Description</label>
+                    <textarea rows="6" name="moment[description]" class="form-control" id="momentDesc" placeholder="Description"><%= moment.description %></textarea>
+                </div>
+
+                <div class="wrapper text-center">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <a href="/moments" class="btn btn-danger" role="button">Back To Moments</a>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+          
+        </div>
+
+    </div>
+
+</div>
+
+<% include ../partials/navbarBottom %>
+<% include ../partials/footer %>

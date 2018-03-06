@@ -1,0 +1,36 @@
+<% include ../partials/header %>
+<% include ../partials/navbar %>
+    <div class="container main">
+        <% include ../partials/flash %>
+        <header class="jumbotron">
+            <div class="container">
+                <h1><i class="far fa-images"></i> Welcome To TripTake!</h1>
+                <p>View our hand-picked trip photos from all over the world</p>
+                <p>
+                    <a href="/moments/new" class="btn btn-lg btn-primary">Add Trip Moment</a>
+                </p>
+            </div>
+        </header>
+
+        <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+            <% moments.forEach(function(moment) { %>
+                <div class="col-md-3 col-sm-6">
+                    <div class="thumbnail">
+                        <a href="/moments/<%= moment._id %>">
+                            <img src="<%= moment.image %>" alt="<%= moment.description %>">
+                        </a>
+                        <div class="caption">
+                            <h4>
+                                <%= moment.name %>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+
+                <% }) %>
+        </div>
+
+    </div>
+
+<% include ../partials/navbarBottom %>
+<% include ../partials/footer %>
