@@ -77,6 +77,10 @@ form button .btn .btn-primary {
     display: inline-block;
 }
 
+div > form > legend {
+    text-align: center;
+}
+
 .form-container {
     min-width: 330px;
 }
@@ -85,3 +89,13 @@ form button .btn .btn-primary {
     height: 400px;
     width: 100%;
 }
+
+.thumbnail > h1 {
+    text-align: center;
+}
+
+.col-md-4 >.thumbnail > .caption {
+    text-align: center;
+    display: block;
+}
+

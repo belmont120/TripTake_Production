@@ -65,3 +65,56 @@ var waitingDialog = waitingDialog || (function ($) {
 	};
 
 })(jQuery);
+
+
+$("#editUserDescBtn").click(function(){
+	$("#userDescDisplay").attr("hidden","");
+	$("#userDescForm").removeAttr("hidden");
+});
+
+function closeUserDescEdit() {
+	$("#userDescForm").attr("hidden","");
+	$("#userDescDisplay").removeAttr("hidden");
+}
+
+
+$("#cancelUserDescBtn").click(function(){
+	closeUserDescEdit();
+});
+
+
+$("#submitUserDecBtn").click(function(){
+	var userDescContent = $("#userDescArea").html();
+	$("#userDesc").html(userDescContent);
+
+	apiUrl = getApiUrl(document.URL) + "?_method=PUT";
+	console.log(apiUrl)
+	console.log(userDescContent);
+
+	var request = $.ajax({
+		method: "PUT",
+		url: apiUrl,
+		data: {description: userDescContent}
+	})
+	.done(function(msg){
+		closeUserDescEdit();
+		bootbox.alert(msg);
+	})
+	.fail(function(){
+		bootbox.alert("Something went wrong updating your description.");
+	});
+
+});
+
+function nthIndex(str, pat, n){
+    var L= str.length, i= -1;
+    while(n-- && i++<L){
+        i= str.indexOf(pat, i);
+        if (i < 0) break;
+    }
+    return i;
+}
+
+function getApiUrl(url) {
+	return (url.substring(0, nthIndex(url, "/", 3) + 1) + "api/" + url.substring(nthIndex(url, "/", 3) + 1));
+}

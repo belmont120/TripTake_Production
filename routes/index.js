@@ -2,7 +2,7 @@ var express     = require("express");
 var router      = express.Router({mergeParams: true});
 var passport    = require("passport");
 var User        = require("../models/user");
-
+var expressSanitizer = require("express-sanitizer");
 
 router.get("/", function (req, res) {
     res.render("landing");
@@ -14,7 +14,8 @@ router.get("/register", function(req, res){
 });
 
 router.post("/register", function(req, res){
-    var newUser = new User({username: req.body.username});
+    var newUser = createNewUser(req.body);
+
     User.register(newUser, req.body.password, function(err, user){
         if(err) {
             console.log(err);
@@ -46,4 +47,40 @@ router.get("/logout", function(req, res){
     res.redirect("/moments");
 });
 
-module.exports = router;
+router.get("/users/:id", function(req, res){
+    User.findById(req.params.id, function(err, foundUser) {
+        if(err) {
+            req.flash("error", err.message);
+            res.redirect("back");
+        } else {
+            res.render("users/show", {user: foundUser});
+        }
+    });
+});
+
+router.put("/users/:id", function(req, res){
+    var user = req.body.user;
+    user.description = req.sanitize(user.description);
+
+    User.findByIdAndUpdate(req.params.id, user, function(err, foundUser) {
+        if(err) {
+            req.flash("error", err.message);
+            res.redirect("back");
+        } else {
+            res.redirect("/users/" + req.params.id);
+        }
+    });
+});
+
+function createNewUser(reqBody){
+    var newUser = new User();
+    newUser.username = reqBody.username;
+    newUser.firstName = reqBody.firstName;
+    newUser.lastName = reqBody.lastName;
+    newUser.email = reqBody.email;
+    newUser.avatar = reqBody.avatar;
+    
+    return newUser;
+}
+
+module.exports = router; 

@@ -57,9 +57,10 @@ middlewareObj.removeMomentComments = function(req, res, next) {
 middlewareObj.removeMoment = function(req, res, next){
     Moment.findByIdAndRemove(req.params.id, function (err, foundMoment) {
         if (err) {
-            console.log(err);
+            req.flash("error", err.message);
             res.redirect("back");
         } else {
+            req.flash("success", "Moment removed successfully.");
             next();
         }
     });
@@ -73,9 +74,10 @@ middlewareObj.removeCommentReference = function(req, res, next) {
             }
         }, function(err, foundMoment){
             if(err) {
-                console.log(err);
+                req.flash("error", err.message);
                 res.redirect("back");
             } else {
+                req.flash("success", "Comment removed successfully.");
                 next();
             }
         }
@@ -86,14 +88,17 @@ middlewareObj.checkCommentOwnership = function(req, res, next) {
     if (req.isAuthenticated()) {
         Moment.findById(req.params.id, function (err, foundMoment) {
             if (err) {
+                req.flash("error", err.message);
                 res.redirect("back");
             } else {
                 if (!foundMoment) {
+                    req.flash("error", "Moment not found.");
                     res.redirect("back");
                 }
 
                 Comment.findById(req.params.comment_id, function (err, foundComment) {
                     if (err) {
+                        req.flash("error", err.message);
                         res.redirect("back");
                     } else {
 
@@ -111,6 +116,8 @@ middlewareObj.checkCommentOwnership = function(req, res, next) {
         res.redirect("back");
     }
 }
+
+
 
 
 module.exports = middlewareObj;

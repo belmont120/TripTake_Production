@@ -14,7 +14,7 @@
                     <h4><a href="#"><%= foundMoment.name %></a></h4>
                     <p><%- foundMoment.description %></p>
                     <p>
-                        <em>Submitted By <%= foundMoment.author.username %>, <%= moment(foundMoment.createdAt).fromNow() %></em>
+                        <em>Submitted By <a href="/users/<%= foundMoment.author.id %>"><%= foundMoment.author.username %></a>, <%= moment(foundMoment.createdAt).fromNow() %></em>
                     </p>
 
                     <% if(currentUser && (foundMoment.author.id.equals(currentUser._id) || currentUser.isAdmin)) { %>
