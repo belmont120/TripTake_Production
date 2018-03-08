@@ -1,9 +1,21 @@
+body {
+    background-color: #3b3b3b;
+    color: #f6f6f6;
+}
+
 .thumbnail img {
-    width: 100%;
+
+    border-radius: 15px;
 }
 
 .thumbnail {
-    padding: 0;
+    border: 0;
+    background-color: #3b3b3b;
+
+}
+
+.thumbnail .caption {
+    color: #f6f6f6;
 }
 
 .form-container {
@@ -12,9 +24,30 @@
 }
 
 .powered-icon {
-    width: 40px;
-    height: 40px;
-    margin: 5px 0;
+    width: 30px;
+    height: 30px;
+    margin: 2px 0;
+}
+
+nav.navbar.navbar-default.navbar-fixed-bottom {
+    min-height: 34px;
+    border-top-color: royalblue;
+}
+
+#navbar-top {
+    background-color: #2b2b2b;
+    border-bottom-color: royalblue;
+    color: #f6f6f6;
+}
+
+p.navbar-text.navbar-left {
+    margin: 10px 15px;
+    font-size: 7px;
+}
+
+.jumbotron {
+    background-color: #2b2b2b;
+    color: #f6f6f6;
 }
 
 .mynavbar {
@@ -79,6 +112,7 @@ form button .btn .btn-primary {
 
 div > form > legend {
     text-align: center;
+    color: #f6f6f6;
 }
 
 .form-container {
@@ -99,3 +133,27 @@ div > form > legend {
     display: block;
 }
 
+.btn .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 6px auto;
+}
+
+div .well {
+    background-color: #2b2b2b;
+    border: 0;
+}
+
+div .well > hr {
+    border-color: royalblue;
+}
+
+div.list-group > .list-group-item {
+    background-color: #2b2b2b;
+    color: #f6f6f6;
+    border: 0;
+}
+
+ul.nav.navbar-nav.navbar-right>li>a.btn.btn-default {
+    color: royalblue;
+}

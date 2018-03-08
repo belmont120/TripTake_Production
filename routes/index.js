@@ -3,6 +3,7 @@ var router      = express.Router({mergeParams: true});
 var passport    = require("passport");
 var User        = require("../models/user");
 var expressSanitizer = require("express-sanitizer");
+var Moment  = require("../models/moment");
 
 router.get("/", function (req, res) {
     res.render("landing");
@@ -53,7 +54,15 @@ router.get("/users/:id", function(req, res){
             req.flash("error", err.message);
             res.redirect("back");
         } else {
-            res.render("users/show", {user: foundUser});
+            Moment.find().where("author.id").equals(foundUser._id).exec(function(err, foundMoments){
+                if(err) {
+                    req.flash("error", err.message);
+                    res.redirect("back");
+                } else {
+
+                    res.render("users/show", {user: foundUser, moments: foundMoments});
+                }
+            });
         }
     });
 });
@@ -67,6 +76,7 @@ router.put("/users/:id", function(req, res){
             req.flash("error", err.message);
             res.redirect("back");
         } else {
+
             res.redirect("/users/" + req.params.id);
         }
     });

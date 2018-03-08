@@ -1,35 +1,57 @@
 <% include ../partials/header %>
 <% include ../partials/navbar %>
     <div class="container main">
-        <% include ../partials/flash %>
-        <header class="jumbotron">
-            <div class="container">
-                <h1><i class="far fa-images"></i> Welcome To TripTake!</h1>
-                <p>View our hand-picked trip photos from all over the world</p>
-                <p>
-                    <a href="/moments/new" class="btn btn-lg btn-primary">Add Trip Moment</a>
-                </p>
-            </div>
-        </header>
-
-        <div class="row text-center" style="display:flex; flex-wrap: wrap;">
-            <% moments.forEach(function(moment) { %>
-                <div class="col-md-3 col-sm-6">
-                    <div class="thumbnail">
-                        <a href="/moments/<%= moment._id %>">
-                            <img src="<%= moment.image %>" alt="<%= moment.description %>">
-                        </a>
-                        <div class="caption">
-                            <h4>
-                                <%= moment.name %>
-                            </h4>
-                        </div>
-                    </div>
+        <div class="row">
+            <% include ../partials/flash %>
+            <header class="jumbotron">
+                <div class="container">
+                    <h1><i class="far fa-images"></i> Welcome To TripTake!</h1>
+                    <p>View our hand-picked trip photos from all over the world</p>
+                    <p>
+                        <a href="/moments/new" class="btn btn-lg btn-primary">Add Trip Moment</a>
+                    </p>
                 </div>
+            </header>
 
-                <% }) %>
+            <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <% for(i = 0; i < moments.length; i += 4) { %>
+                        <div class="thumbnail">
+                            <a href="/moments/<%= moments[i]._id %>">
+                                <img src="<%= moments[i].image %>" alt="<%= moments[i].description %>">
+                            </a>
+                        </div>
+                    <% } %>                    
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <% for(i = 1; i < moments.length; i += 4) { %>
+                        <div class="thumbnail">
+                            <a href="/moments/<%= moments[i]._id %>">
+                                <img src="<%= moments[i].image %>" alt="<%= moments[i].description %>">
+                            </a>
+                        </div>
+                    <% } %>                
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <% for(i = 2; i < moments.length; i += 4) { %>
+                        <div class="thumbnail">
+                            <a href="/moments/<%= moments[i]._id %>">
+                                <img src="<%= moments[i].image %>" alt="<%= moments[i].description %>">
+                            </a>
+                        </div>
+                    <% } %>            
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <% for(i = 3; i < moments.length; i += 4) { %>
+                        <div class="thumbnail">
+                            <a href="/moments/<%= moments[i]._id %>">
+                                <img src="<%= moments[i].image %>" alt="<%= moments[i].description %>">
+                            </a>
+                        </div>
+                    <% } %>                
+                </div>
+            </div>            
         </div>
-
     </div>
 
 <% include ../partials/navbarBottom %>
