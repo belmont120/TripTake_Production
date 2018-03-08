@@ -46,8 +46,8 @@ router.get("/", function (req, res) {
         if (err) {
             console.log(err);
         } else {
-            // console.log("Moments From Db: ");
-            // console.log(allMoments);
+            allMoments.sort(function(a, b){return new Date(b.createdAt) - new  Date(a.createdAt)});
+
             res.render("moments/index", {
                 moments: allMoments,
             });
@@ -72,6 +72,9 @@ router.get("/:id", function (req, res) {
             }
             // console.log("Moment From Db: ");
             // console.log(foundMoment);
+
+            foundMoment.comments.sort(function(a, b){return new Date(b.createdAt) - new Date(a.createdAt)});
+
             foundMoment.api_key = process.env.GOOGLE_MAP_KEY;
             res.render("moments/show", {
                 foundMoment: foundMoment
